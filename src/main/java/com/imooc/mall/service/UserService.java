@@ -11,5 +11,20 @@ public interface UserService {
      */
     User getUser();
 
+    /**
+     * 注册方法
+     * @param userName
+     * @param password
+     * @throws ImoocMallException
+     */
     void register(String userName,String password) throws ImoocMallException;
+
+    /**
+     * 登录方法
+     * @param userName
+     * @param password
+     * @return
+     * @throws ImoocMallException
+     */
+    User login(String userName, String password) throws ImoocMallException;
 }

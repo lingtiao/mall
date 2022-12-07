@@ -48,4 +48,26 @@ public class UserServiceImpl implements UserService {
             throw new ImoocMallException(ImoocMallExceptionEnum.INSERT_FAILED);
         }
     }
+
+    /**
+     * 登录方法
+     * @param userName
+     * @param password
+     * @return
+     * @throws ImoocMallException
+     */
+    @Override
+    public User login(String userName, String password) throws ImoocMallException {
+        String md5Password = null;
+        try {
+            md5Password = MD5Utils.getMD5String(password);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        User user = userMapper.selectLogin(userName, md5Password);
+        if (user == null) {
+            throw new ImoocMallException(ImoocMallExceptionEnum.WRONG_PASSWORD);
+        }
+        return user;
+    }
 }

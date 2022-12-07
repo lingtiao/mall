@@ -2,6 +2,7 @@ package com.imooc.mall.controller;
 
 
 import com.imooc.mall.common.ApiRestResponse;
+import com.imooc.mall.common.Constant;
 import com.imooc.mall.exception.ImoocMallException;
 
 import com.imooc.mall.exception.ImoocMallExceptionEnum;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class UserController {
@@ -50,5 +53,29 @@ public class UserController {
 
         userService.register(userName, password);
         return ApiRestResponse.success();
+    }
+
+    /**
+     * 登录方法
+     * @param userName
+     * @param password
+     * @param session
+     * @return
+     */
+    @PostMapping("/login")
+    @ResponseBody
+    public ApiRestResponse login(@RequestParam("userName") String userName,
+                                 @RequestParam("password") String password,
+                                 HttpSession session) throws ImoocMallException {
+        if (StringUtils.isEmpty(userName)) {//如果用户名为空，直接返回用户名不能为空的信息；
+            return ApiRestResponse.error(ImoocMallExceptionEnum.NEED_USER_NAME);
+        }
+        if (StringUtils.isEmpty(password)) {//如果密码为空，直接返回密码不能为空的信息；
+            return ApiRestResponse.error(ImoocMallExceptionEnum.NEED_PASSWORD);
+        }
+        User user = userService.login(userName, password);
+        user.setPassword(null);//返回用户信息时候，去掉密码
+        session.setAttribute(Constant.IMOOC_MALL_USER, user);
+        return ApiRestResponse.success(user);
     }
 }
