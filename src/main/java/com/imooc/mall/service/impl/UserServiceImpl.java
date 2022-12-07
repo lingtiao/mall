@@ -70,4 +70,27 @@ public class UserServiceImpl implements UserService {
         }
         return user;
     }
+
+    /**
+     * 更新个性签名
+     * @param user
+     */
+    @Override
+    public void updateInformation(User user) throws ImoocMallException {
+        int updateCount = userMapper.updateByPrimaryKeySelective(user);//更新操作，影响的记录数；正常情况下应该是1
+        //如果更新的返回结果 > 1；那么表示，更新操作是不正确的。即更新操作是失败了的；
+        if (updateCount > 1) {
+            throw new ImoocMallException(ImoocMallExceptionEnum.UPDATE_FAILED);
+        }
+    }
+
+    /**
+     * 判断当前用户是否为管理员身份
+     * @param user
+     * @return
+     */
+    @Override
+    public boolean checkAdminRole(User user) {
+        return user.getRole().equals(2);
+    }
 }

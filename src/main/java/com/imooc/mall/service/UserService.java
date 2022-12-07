@@ -27,4 +27,17 @@ public interface UserService {
      * @throws ImoocMallException
      */
     User login(String userName, String password) throws ImoocMallException;
+
+    /**
+     * 更新个性签名
+     * @param user
+     */
+    void updateInformation(User user) throws ImoocMallException;
+
+    /**
+     * 判断当前用户是否为管理员身份
+     * @param user
+     * @return
+     */
+    boolean checkAdminRole(User user);
 }
