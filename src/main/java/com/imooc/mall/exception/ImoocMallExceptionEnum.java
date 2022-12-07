@@ -10,6 +10,9 @@ public enum ImoocMallExceptionEnum {
     NAME_EXISTED(10004,"用户名已存在，请重试"),
     INSERT_FAILED(10005,"插入失败，请重试"),
     WRONG_PASSWORD(10006,"密码错误"),
+    NEED_LOGIN(10007,"用户未登录"),
+    UPDATE_FAILED(10008,"更新失败"),
+    NEED_ADMIN(10009,"无权限"),
     SYSTEM_ERROR(20001,"系统异常");
 
 
