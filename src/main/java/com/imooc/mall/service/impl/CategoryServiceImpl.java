@@ -59,4 +59,23 @@ public class CategoryServiceImpl implements CategoryService {
             throw new ImoocMallException(ImoocMallExceptionEnum.UPDATE_FAILED);
         }
     }
+
+    /**
+     * 删除目录分类
+     * @param id
+     */
+    @Override
+    public void delete(Integer id) {
+        //先根据id，尝试去查询有没有这个分类
+        Category categoryOld = categoryMapper.selectByPrimaryKey(id);
+        //如果根据id，没有查到记录；那说明数据库没有这个id的记录；那么就抛出删除失败的异常
+        if (categoryOld == null) {
+            throw new ImoocMallException(ImoocMallExceptionEnum.DELETE_ERROR);
+        }
+        //如果根据id，查到了记录；那么就调用删除方法去删除
+        int count = categoryMapper.deleteByPrimaryKey(id);
+        if (count == 0) {//如果返回值为0，就表示删除失败了；抛出删除失败的异常
+            throw new ImoocMallException(ImoocMallExceptionEnum.DELETE_ERROR);
+        }
+    }
 }
