@@ -39,4 +39,24 @@ public class CategoryServiceImpl implements CategoryService {
             throw new ImoocMallException(ImoocMallExceptionEnum.CREATE_FAILED);
         }
     }
+
+    /**
+     * 更新目录分类
+     * @param updateCategory
+     */
+    @Override
+    public void update(Category updateCategory) {
+        //因为分类的名字不允许重复；所以，在更新前需要有下面的判断逻辑；
+        if (updateCategory.getName() != null) {
+            Category categoryOld = categoryMapper.selectByName(updateCategory.getName());
+            if (categoryOld.getName() != null && !categoryOld.getId().equals(updateCategory.getId())) {
+                throw new ImoocMallException(ImoocMallExceptionEnum.NAME_EXISTED);
+            }
+        }
+        //如果没有name重名的风险，就调用方法去更新；
+        int count = categoryMapper.updateByPrimaryKeySelective(updateCategory);
+        if (count == 0) {
+            throw new ImoocMallException(ImoocMallExceptionEnum.UPDATE_FAILED);
+        }
+    }
 }
