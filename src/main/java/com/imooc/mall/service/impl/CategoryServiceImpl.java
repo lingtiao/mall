@@ -11,6 +11,7 @@ import com.imooc.mall.model.vo.CategoryVO;
 import com.imooc.mall.service.CategoryService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -109,6 +110,7 @@ public class CategoryServiceImpl implements CategoryService {
      * @return
      */
     @Override
+    @Cacheable(value = "listCategoryForCustomer")
     public List<CategoryVO> listCategoryForCustomer() {
         //定义一个List，这个List就用来存在最终的查询结果；即，这个List中的直接元素是：所有的parent_id=0，即type=1的，第1级别的目录；
         List<CategoryVO> categoryVOList = new ArrayList<CategoryVO>();
