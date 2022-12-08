@@ -7,6 +7,7 @@ import com.imooc.mall.model.pojo.User;
 import com.imooc.mall.model.request.AddCategoryReq;
 import com.imooc.mall.service.CategoryService;
 import com.imooc.mall.service.UserService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,16 +34,10 @@ public class CategoryController {
      * @param addCategoryReq
      * @return
      */
+    @ApiOperation("后台添加商品分类目录")
     @PostMapping("/admin/category/add")
     @ResponseBody
     public ApiRestResponse addCategory(HttpSession session, @Valid @RequestBody AddCategoryReq addCategoryReq) {
-        //校验入参，如果为空就返回【参数不能为空】的信息
-//        if (addCategoryReq.getName() == null ||
-//                addCategoryReq.getOrderNum() == null ||
-//                addCategoryReq.getParentId() == null ||
-//                addCategoryReq.getType() == null) {
-//            return ApiRestResponse.error(ImoocMallExceptionEnum.NEED_USER_NAME.NAME_NOT_NULL);
-//        }
 
         //尝试获取当前登录用户
         User currentUser = (User) session.getAttribute(Constant.IMOOC_MALL_USER);
