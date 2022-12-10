@@ -21,4 +21,11 @@ public interface ProductService {
      * @param id
      */
     void delete(Integer id);
+
+    /**
+     * 批量上下架商品
+     * @param ids
+     * @param sellStatus
+     */
+    void batchUpdateSellStatus(Integer[] ids, Integer sellStatus);
 }

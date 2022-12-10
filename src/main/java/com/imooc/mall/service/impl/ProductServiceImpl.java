@@ -85,4 +85,14 @@ public class ProductServiceImpl implements ProductService {
             throw new ImoocMallException(ImoocMallExceptionEnum.DELETE_ERROR);
         }
     }
+
+    /**
+     * 批量上下架商品
+     * @param ids
+     * @param sellStatus
+     */
+    @Override
+    public void batchUpdateSellStatus(Integer[] ids, Integer sellStatus) {
+        productMapper.batchUpdateSellStatus(ids, sellStatus);
+    }
 }
