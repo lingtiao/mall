@@ -174,4 +174,17 @@ public class CartServiceImpl implements CartService {
         }
         return this.list(userId);
     }
+
+    /**
+     * 全选/全不选购物车的商品
+     * @param userId
+     * @param selected
+     * @return
+     */
+    @Override
+    public List<CartVO> selectAllOrNot(Integer userId, Integer selected) {
+        //直接，更新该用户，在购物车中的，所有商品的selected状态；（因为是全部更新，所以这儿我们完全不需要先查看有没有，直接更新就是了）
+        cartMapper.selectOrNot(userId, null, selected);
+        return this.list(userId);
+    }
 }

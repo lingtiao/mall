@@ -84,4 +84,16 @@ public class CartController {
         List<CartVO> cartVOList = cartService.selectOrNot(UserFilter.currentUser.getId(), productId, selected);
         return ApiRestResponse.success(cartVOList);
     }
+
+    /**
+     * 购物车模块：全选/全不选购物车的商品
+     * @param selected
+     * @return
+     */
+    @ApiOperation("全选/全不选购物车的商品")
+    @PostMapping("/selectAll")
+    public ApiRestResponse selectAll(@RequestParam("selected") Integer selected) {
+        List<CartVO> cartVOList = cartService.selectAllOrNot(UserFilter.currentUser.getId(), selected);
+        return ApiRestResponse.success(cartVOList);
+    }
 }

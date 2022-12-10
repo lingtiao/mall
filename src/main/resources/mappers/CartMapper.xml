@@ -142,6 +142,8 @@
     update imooc_mall_cart
     set selected = #{selected}
     where user_id = #{userId}
+    <if test="productId != null">
       and product_id = #{productId}
+    </if>
   </update>
 </mapper>

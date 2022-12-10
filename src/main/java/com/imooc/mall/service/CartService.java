@@ -45,4 +45,12 @@ public interface CartService {
      * @return
      */
     List<CartVO> selectOrNot(Integer userId, Integer productId, Integer selected);
+
+    /**
+     * 全选/全不选购物车的商品
+     * @param userId
+     * @param selected
+     * @return
+     */
+    List<CartVO> selectAllOrNot(Integer userId, Integer selected);
 }
