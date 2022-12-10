@@ -111,7 +111,7 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     @Cacheable(value = "listCategoryForCustomer")
-    public List<CategoryVO> listCategoryForCustomer() {
+    public List<CategoryVO> listCategoryForCustomer(Integer parentId) {
         //定义一个List，这个List就用来存在最终的查询结果；即，这个List中的直接元素是：所有的parent_id=0，即type=1的，第1级别的目录；
         List<CategoryVO> categoryVOList = new ArrayList<CategoryVO>();
 
@@ -153,4 +153,5 @@ public class CategoryServiceImpl implements CategoryService {
             }
         }
     }
+
 }

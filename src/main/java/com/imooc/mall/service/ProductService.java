@@ -3,6 +3,7 @@ package com.imooc.mall.service;
 import com.github.pagehelper.PageInfo;
 import com.imooc.mall.model.pojo.Product;
 import com.imooc.mall.model.request.AddProductReq;
+import com.imooc.mall.model.request.ProductListReq;
 
 public interface ProductService {
     /**
@@ -43,4 +44,11 @@ public interface ProductService {
      * @return
      */
     Product detail(Integer id);
+
+    /**
+     * 根据条件，以分页的方式，查询商品数据；
+     * @param productListReq
+     * @return
+     */
+    PageInfo list(ProductListReq productListReq);
 }

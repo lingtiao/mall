@@ -39,8 +39,7 @@ public interface CategoryService {
      * 递归查询得到，分类目录数据；（针对前台的）
      * @return
      */
-
-    List<CategoryVO> listCategoryForCustomer();
+    List<CategoryVO> listCategoryForCustomer(Integer parentId);
 
 
 }
