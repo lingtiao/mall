@@ -95,4 +95,35 @@ public class CartServiceImpl implements CartService {
             throw new ImoocMallException(ImoocMallExceptionEnum.NOT_ENOUGH);
         }
     }
+
+    /**
+     * 更新购物车中，某商品的数量；
+     * @param userId
+     * @param productId
+     * @param count
+     * @return
+     */
+    @Override
+    public List<CartVO> update(Integer userId, Integer productId, Integer count) {
+        //更新的时候，我们也要检查下：【前台传过来的productId，对应的商品是否存在】、【商品是否是上架状态】、【商品库存是否足够】
+        validProduct(productId, count);
+
+        //然后，在看下购物车中，是否已经添加过了这个商品；；；理论上，既然是更新嘛，购物车中应该是已经添加过这个商品的；
+        Cart cart = cartMapper.selectCartByUserIdAndProductId(userId, productId);
+        if (cart == null) {
+            //所以，如果购物车中没有这个商品；这就表示是有问题的；那么我们就不进行这个更新操作；返回“更新失败”异常；
+            throw new ImoocMallException(ImoocMallExceptionEnum.UPDATE_FAILED);
+        } else {
+            //如果购物车中已经有了这个商品；那么我们就去更新购物车中该商品的数量；
+            // 也就是说把该商品在购物车中的数量，更改为我们传入的数量count
+            Cart cartNew = new Cart();
+            cartNew.setQuantity(count);
+            cartNew.setId(cart.getId());
+            cartNew.setProductId(cart.getProductId());
+            cartNew.setUserId(cart.getUserId());
+            cartNew.setSelected(Constant.CartIsSelected.CHECKED);
+            cartMapper.updateByPrimaryKeySelective(cartNew);
+        }
+        return this.list(userId);
+    }
 }
