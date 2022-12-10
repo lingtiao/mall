@@ -43,4 +43,26 @@ public class ProductServiceImpl implements ProductService {
             throw new ImoocMallException(ImoocMallExceptionEnum.CREATE_FAILED);
         }
     }
+
+    /**
+     * 更新商品
+     * @param product
+     */
+    @Override
+    public void update(Product product) {
+        //先根据商品名，去数据库中查，看是否有叫这个名字的商品数据
+        Product productOld = productMapper.selectByName(product.getName());
+        //如果上面查到了
+        //而且【上面查到的商品的id】和【我们前台穿过来的商品id不一样】，那么不允许更新，抛出不允许重名异常；
+        // 很显然，这一条也是为了防止商品名重名；
+        if (productOld != null && productOld.getId() != product.getId()) {
+            throw new ImoocMallException(ImoocMallExceptionEnum.NAME_EXISTED);
+        }
+        //然后调用Dao层的更新方法，去更新数据
+        int count = productMapper.updateByPrimaryKeySelective(product);
+        //如果更新失败，就抛出更新失败异常；
+        if (count == 0) {
+            throw new ImoocMallException(ImoocMallExceptionEnum.UPDATE_FAILED);
+        }
+    }
 }
