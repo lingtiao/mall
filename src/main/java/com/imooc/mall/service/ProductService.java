@@ -36,4 +36,11 @@ public interface ProductService {
      * @return
      */
     PageInfo listForAdmin(Integer pageNum, Integer pageSize);
+
+    /**
+     * 查看商品详情
+     * @param id
+     * @return
+     */
+    Product detail(Integer id);
 }

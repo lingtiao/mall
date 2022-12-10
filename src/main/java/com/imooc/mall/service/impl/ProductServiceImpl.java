@@ -115,4 +115,15 @@ public class ProductServiceImpl implements ProductService {
         PageInfo pageInfo = new PageInfo(productList);
         return pageInfo;
     }
+
+    /**
+     * 根据id，查询商品
+     * @param id
+     * @return
+     */
+    @Override
+    public Product detail(Integer id) {
+        Product product = productMapper.selectByPrimaryKey(id);
+        return product;
+    }
 }
