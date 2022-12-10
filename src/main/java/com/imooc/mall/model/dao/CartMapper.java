@@ -1,6 +1,11 @@
 package com.imooc.mall.model.dao;
 
 import com.imooc.mall.model.pojo.Cart;
+import com.imooc.mall.model.vo.CartVO;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
 
 public interface CartMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +19,11 @@ public interface CartMapper {
     int updateByPrimaryKeySelective(Cart record);
 
     int updateByPrimaryKey(Cart record);
+
+    /**
+     * 根据userId，从cart表和product表中，查询购物车数据
+     * @param userId
+     * @return
+     */
+    List<CartVO> selectList(@Param("userId") Integer userId);
 }
