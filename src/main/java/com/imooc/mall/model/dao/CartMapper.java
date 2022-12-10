@@ -33,4 +33,14 @@ public interface CartMapper {
     *@return
     */
     Cart selectCartByUserIdAndProductId(@Param("userId") Integer userId,@Param("productId") Integer productId);
+
+    /**
+     * 根据userId、ProductId、selected,更新购物车中某个商品的selected字段
+     * @param userId
+     * @param productId
+     * @param selected
+     * @return
+     */
+    Integer selectOrNot(@Param("userId") Integer userId, @Param("productId") Integer productId,
+                        @Param("selected") Integer selected);
 }

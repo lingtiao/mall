@@ -28,4 +28,21 @@ public interface CartService {
      * @return
      */
     List<CartVO> update(Integer userId, Integer productId, Integer count);
+
+    /**
+     * 删除购物车中的某个商品
+     * @param userId
+     * @param productId
+     * @return
+     */
+    List<CartVO> delete(Integer userId, Integer productId);
+
+    /**
+     * 选中/不选中购物车的某个商品
+     * @param userId
+     * @param productId
+     * @param selected
+     * @return
+     */
+    List<CartVO> selectOrNot(Integer userId, Integer productId, Integer selected);
 }

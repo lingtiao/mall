@@ -29,13 +29,14 @@ public class CartServiceImpl implements CartService {
 
     /**
      * 根据前端要求，根据cart表和product表，获取并组织购物车列表数据
+     *
      * @return
      */
     @Override
     public List<CartVO> list(Integer userId) {
         List<CartVO> cartVOList = cartMapper.selectList(userId);
         for (int i = 0; i < cartVOList.size(); i++) {
-            CartVO cartVO =  cartVOList.get(i);
+            CartVO cartVO = cartVOList.get(i);
             cartVO.setTotalPrice(cartVO.getPrice() * cartVO.getQuantity());
         }
         return cartVOList;
@@ -43,6 +44,7 @@ public class CartServiceImpl implements CartService {
 
     /**
      * 添加商品到购物车
+     *
      * @param userId
      * @param productId
      * @param count
@@ -81,6 +83,7 @@ public class CartServiceImpl implements CartService {
 
     /**
      * 工具方法；判断商品是否存在、商品是否是上架状态、商品库存是否足够；
+     *
      * @param productId
      * @param count
      */
@@ -98,6 +101,7 @@ public class CartServiceImpl implements CartService {
 
     /**
      * 更新购物车中，某商品的数量；
+     *
      * @param userId
      * @param productId
      * @param count
@@ -123,6 +127,50 @@ public class CartServiceImpl implements CartService {
             cartNew.setUserId(cart.getUserId());
             cartNew.setSelected(Constant.CartIsSelected.CHECKED);
             cartMapper.updateByPrimaryKeySelective(cartNew);
+        }
+        return this.list(userId);
+    }
+
+    /**
+     * 删除购物车中的某个商品
+     *
+     * @param userId
+     * @param productId
+     * @return
+     */
+    @Override
+    public List<CartVO> delete(Integer userId, Integer productId) {
+
+        //首先，根据userId和productId，去查一下，看购物车中是否有对应的数据
+        Cart cart = cartMapper.selectCartByUserIdAndProductId(userId, productId);
+        if (cart == null) {
+            //所以，如果购物车中没有这个商品；那么很显然，是无法删除的(都没有，怎么删除……);于是，就抛出“删除失败”异常；
+            throw new ImoocMallException(ImoocMallExceptionEnum.DELETE_ERROR);
+        } else {
+            //如果购物车中有这个商品，那么我们就可以正常去删除了
+            cartMapper.deleteByPrimaryKey(cart.getId());
+        }
+        return this.list(userId);
+    }
+
+    /**
+     * 选中/不选中购物车的某个商品
+     *
+     * @param userId
+     * @param productId
+     * @param selected
+     * @return
+     */
+    @Override
+    public List<CartVO> selectOrNot(Integer userId, Integer productId, Integer selected) {
+        //首先，根据userId和productId，去查一下，看购物车中是否有对应的数据
+        Cart cart = cartMapper.selectCartByUserIdAndProductId(userId, productId);
+        if (cart == null) {
+            //所以，如果购物车中没有这个商品；那么很显然，是无法选中(都没有，怎么更新其selected字段的值);于是，就抛出“更新失败”异常；
+            throw new ImoocMallException(ImoocMallExceptionEnum.UPDATE_FAILED);
+        } else {
+            //如果购物车中有这个商品，那么我们就可以正常去更新其selected字段了
+            cartMapper.selectOrNot(userId, productId, selected);
         }
         return this.list(userId);
     }
