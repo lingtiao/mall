@@ -26,4 +26,11 @@ public interface CartMapper {
      * @return
      */
     List<CartVO> selectList(@Param("userId") Integer userId);
+
+   /**根据userId ProductId,从cart表中，查询数据：
+    *@param userId
+    *@param productId
+    *@return
+    */
+    Cart selectCartByUserIdAndProductId(@Param("userId") Integer userId,@Param("productId") Integer productId);
 }
