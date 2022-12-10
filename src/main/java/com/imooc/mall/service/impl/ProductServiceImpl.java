@@ -1,5 +1,7 @@
 package com.imooc.mall.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.imooc.mall.exception.ImoocMallException;
 import com.imooc.mall.exception.ImoocMallExceptionEnum;
 import com.imooc.mall.model.dao.ProductMapper;
@@ -9,6 +11,8 @@ import com.imooc.mall.service.ProductService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 描述：商品Service实现类;
@@ -94,5 +98,21 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void batchUpdateSellStatus(Integer[] ids, Integer sellStatus) {
         productMapper.batchUpdateSellStatus(ids, sellStatus);
+    }
+
+    /**
+     * 后台的，获取商品的列表
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public PageInfo listForAdmin(Integer pageNum, Integer pageSize) {
+        //设置分页的：当前页，每一页的记录数；
+        PageHelper.startPage(pageNum, pageSize);
+        //调用Dao层的方法，去查询
+        List<Product> productList = productMapper.selectListForAdmin();
+        //得到PageInfo对象
+        PageInfo pageInfo = new PageInfo(productList);
+        return pageInfo;
     }
 }

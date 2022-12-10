@@ -1,5 +1,6 @@
 package com.imooc.mall.service;
 
+import com.github.pagehelper.PageInfo;
 import com.imooc.mall.model.pojo.Product;
 import com.imooc.mall.model.request.AddProductReq;
 
@@ -28,4 +29,11 @@ public interface ProductService {
      * @param sellStatus
      */
     void batchUpdateSellStatus(Integer[] ids, Integer sellStatus);
+
+    /**
+     * 后台的，获取商品的列表
+     * @param pageSize
+     * @return
+     */
+    PageInfo listForAdmin(Integer pageNum, Integer pageSize);
 }

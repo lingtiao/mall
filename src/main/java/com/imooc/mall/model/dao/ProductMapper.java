@@ -3,6 +3,8 @@ package com.imooc.mall.model.dao;
 import com.imooc.mall.model.pojo.Product;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface ProductMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -29,4 +31,10 @@ public interface ProductMapper {
      * @return
      */
     int batchUpdateSellStatus(@Param("ids") Integer[] ids, @Param("sellStatus") Integer sellStatus);
+
+    /**
+     * 后台查询商品列表
+     * @return
+     */
+    List<Product> selectListForAdmin();
 }
