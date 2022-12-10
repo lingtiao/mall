@@ -4,6 +4,10 @@ import com.imooc.mall.model.pojo.Product;
 import com.imooc.mall.model.request.AddProductReq;
 
 public interface ProductService {
+    /**
+     * 添加商品
+     * @param addProductReq
+     */
     void add(AddProductReq addProductReq);
 
     /**
@@ -11,4 +15,10 @@ public interface ProductService {
      * @param product
      */
     void update(Product product);
+
+    /**
+     * 删除商品
+     * @param id
+     */
+    void delete(Integer id);
 }

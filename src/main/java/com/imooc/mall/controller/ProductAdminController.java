@@ -127,4 +127,17 @@ public class ProductAdminController {
         productService.update(product);
         return ApiRestResponse.success();
     }
+
+    /**
+     * 后台删除商品
+     * @param id
+     * @return
+     */
+    @ApiOperation("删除商品")
+    @PostMapping("/admin/product/delete")
+    @ResponseBody
+    public ApiRestResponse deleteProduct(@RequestParam("id") Integer id) {
+        productService.delete(id);
+        return ApiRestResponse.success();
+    }
 }

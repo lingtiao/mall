@@ -65,4 +65,24 @@ public class ProductServiceImpl implements ProductService {
             throw new ImoocMallException(ImoocMallExceptionEnum.UPDATE_FAILED);
         }
     }
+
+    /**
+     * 删除商品
+     * @param id
+     */
+    @Override
+    public void delete(Integer id) {
+        //先查查，看表里是否有这条数据
+        Product productOld = productMapper.selectByPrimaryKey(id);
+        //如果查不到数据，就抛出删除失败异常；（很容理解，都查不到这条数据，当然无法删除了）
+        if (productOld == null) {
+            throw new ImoocMallException(ImoocMallExceptionEnum.DELETE_ERROR);
+        }
+        //如果一切OK，就调用【mybatis-generator帮我们生成的】删除方法去删除；
+        int count = productMapper.deleteByPrimaryKey(id);
+        //如果没有删除成功，就抛出删除失败异常；
+        if (count == 0) {
+            throw new ImoocMallException(ImoocMallExceptionEnum.DELETE_ERROR);
+        }
+    }
 }
