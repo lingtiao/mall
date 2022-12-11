@@ -1,5 +1,7 @@
 package com.imooc.mall.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.imooc.mall.common.Constant;
 import com.imooc.mall.exception.ImoocMallException;
 import com.imooc.mall.exception.ImoocMallExceptionEnum;
@@ -255,5 +257,45 @@ public class OrderServiceImpl implements OrderService {
         orderVO.setOrderStatusName(orderStatusName);
 
         return orderVO;
+    }
+
+    /**
+     * 前台的，获取某用户的订单列表
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public PageInfo listForCustomer(Integer pageNum, Integer pageSize) {
+        //首先，获取当前登录用户的userId；
+        Integer userId = UserFilter.currentUser.getId();
+        //然后，调用Dao层的方法，去查order表，根据userId查询List<order>；
+        List<Order> orderList = orderMapper.selectOrderForCustomer(userId);
+        //由于接口要求，返回的数据格式，需要是OrderVO；；；所以，编写工具方法：把List<Order>拼装成List<OrderVO>；
+        List<OrderVO> orderVOList = orderListToOrderVOList(orderList);
+        //然后，设置分页的：当前页和每页条目数
+        PageHelper.startPage(pageNum, pageSize);
+        //然后，以Mybatis层返回的查询结果List，得到PageInfo对象
+        PageInfo pageInfo = new PageInfo<>(orderList);
+        //然后，……
+        pageInfo.setList(orderVOList);
+        return pageInfo;
+    }
+
+
+    /**
+     * 工具方法：把List<Order>拼装成List<OrderVO>
+     * @param orderList
+     * @return
+     */
+    private List<OrderVO> orderListToOrderVOList(List<Order> orderList) {
+        List<OrderVO> orderVOList = new ArrayList<>();
+        for (int i = 0; i < orderList.size(); i++) {
+            Order order =  orderList.get(i);
+            //调用getOrderVO()方法，把每个Order拼装成OrderVO
+            OrderVO orderVO = getOrderVO(order);
+            orderVOList.add(orderVO);
+        }
+        return orderVOList;
     }
 }

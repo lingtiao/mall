@@ -218,5 +218,12 @@
     from imooc_mall_order
     where order_no = #{orderNo};
   </select>
+  <select id="selectOrderForCustomer" parameterType="integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from imooc_mall_order
+    where user_id = #{userId}
+    order by create_time desc;
+  </select>
 
 </mapper>

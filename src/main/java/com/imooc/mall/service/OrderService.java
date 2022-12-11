@@ -1,5 +1,6 @@
 package com.imooc.mall.service;
 
+import com.github.pagehelper.PageInfo;
 import com.imooc.mall.model.request.CreateOrderReq;
 import com.imooc.mall.model.vo.OrderVO;
 
@@ -18,4 +19,12 @@ public interface OrderService {
      * @return
      */
     OrderVO detail(String orderNo);
+
+    /**
+     * 前台的，获取某用户的订单列表
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    PageInfo listForCustomer(Integer pageNum, Integer pageSize);
 }

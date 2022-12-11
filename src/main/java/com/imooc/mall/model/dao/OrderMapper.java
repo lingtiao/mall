@@ -2,6 +2,8 @@ package com.imooc.mall.model.dao;
 
 import com.imooc.mall.model.pojo.Order;
 
+import java.util.List;
+
 public interface OrderMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -21,4 +23,11 @@ public interface OrderMapper {
      * @return
      */
     Order selectByOrderNo(String orderNo);
+
+    /**
+     * 根据userId，查询订单
+     * @param userId
+     * @return
+     */
+    List<Order> selectOrderForCustomer(Integer userId);
 }
