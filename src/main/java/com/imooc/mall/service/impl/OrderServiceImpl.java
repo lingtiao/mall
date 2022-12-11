@@ -374,4 +374,29 @@ public class OrderServiceImpl implements OrderService {
         //然后，把这个二维码图片的访问地址返回；
         return pngAddress;
     }
+
+    /**
+     * 支付订单
+     * @param orderNo
+     */
+    @Override
+    public void pay(String orderNo) {
+        //先根据传入的orderNo，去尝试查询order
+        Order order = orderMapper.selectByOrderNo(orderNo);
+        //如果没有找到对应的订单，就抛出“订单不存在异常”
+        if (order == null) {
+            throw new ImoocMallException(ImoocMallExceptionEnum.NO_ORDER);
+        }
+        //如果订单存在，就进行接下来的操作；
+        //如果，订单状态还是未付款状态;那么我们就把其设为已付款状态；（其实，这一步就是付款操作）；
+        //在实际开发中，这儿其实要调用支付宝或者微信等支付接口的；之后调用微信等支付接口成功后，才能够去修改订单的order_status字段；
+        if (order.getOrderStatus() == Constant.OrderStatusEnum.NOT_PAY.getCode()) {
+            order.setOrderStatus(Constant.OrderStatusEnum.PAID.getCode());//更改订单状态为已支付；
+            order.setPayTime(new Date());//设置一下支付时间；
+            orderMapper.updateByPrimaryKeySelective(order);
+        } else {
+            //如果，当前订单状态不是未付款，就抛出“当前订单状态错误”异常；
+            throw new ImoocMallException(ImoocMallExceptionEnum.WRONG_ORDER_STATUS);
+        }
+    }
 }

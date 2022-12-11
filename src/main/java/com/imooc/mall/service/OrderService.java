@@ -40,4 +40,10 @@ public interface OrderService {
      * @return
      */
     String qrcode(String orderNo);
+
+    /**
+     * 支付订单
+     * @param orderNo
+     */
+    void pay(String orderNo);
 }

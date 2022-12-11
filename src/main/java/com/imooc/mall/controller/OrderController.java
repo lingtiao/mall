@@ -80,4 +80,16 @@ public class OrderController {
         String pngAddress = orderService.qrcode(orderNo);
         return ApiRestResponse.success(pngAddress);
     }
+
+    /**
+     * 【前台：支付订单】接口;
+     * @param orderNo
+     * @return
+     */
+    @ApiOperation("支付订单")
+    @GetMapping("/pay")
+    public ApiRestResponse pay(@RequestParam("orderNo") String orderNo) {
+        orderService.pay(orderNo);
+        return ApiRestResponse.success();
+    }
 }
