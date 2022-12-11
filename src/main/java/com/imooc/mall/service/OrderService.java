@@ -60,4 +60,10 @@ public interface OrderService {
      * @param orderNo
      */
     void deliver(String orderNo);
+
+    /**
+     * 完结订单
+     * @param orderNo
+     */
+    void finish(String orderNo);
 }

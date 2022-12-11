@@ -36,4 +36,16 @@ public class OrderAdminController {
         orderService.deliver(orderNo);
         return ApiRestResponse.success();
     }
+
+    /**
+     * 前后台通用：订单完结；
+     * @param orderNo
+     * @return
+     */
+    @ApiOperation("前后台通用的：完结订单")
+    @PostMapping("/order/finish")
+    public ApiRestResponse finish(@RequestParam("orderNo") String orderNo) {
+        orderService.finish(orderNo);
+        return ApiRestResponse.success();
+    }
 }

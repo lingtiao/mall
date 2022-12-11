@@ -20,6 +20,7 @@ import com.imooc.mall.model.vo.OrderItemVO;
 import com.imooc.mall.model.vo.OrderVO;
 import com.imooc.mall.service.CartService;
 import com.imooc.mall.service.OrderService;
+import com.imooc.mall.service.UserService;
 import com.imooc.mall.utils.OrderCodeFactory;
 import com.imooc.mall.utils.QRCodeGenerator;
 import org.springframework.beans.BeanUtils;
@@ -45,6 +46,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     CartService cartService;
+    @Autowired
+    UserService userService;
+
     @Autowired
     ProductMapper productMapper;
     @Autowired
@@ -441,6 +445,38 @@ public class OrderServiceImpl implements OrderService {
             orderMapper.updateByPrimaryKeySelective(order);
         } else {
             //如果，当前订单状态不是已付款，就抛出“当前订单状态错误”异常；
+            throw new ImoocMallException(ImoocMallExceptionEnum.WRONG_ORDER_STATUS);
+        }
+    }
+
+    /**
+     * 完结订单
+     * @param orderNo
+     */
+    @Override
+    public void finish(String orderNo) {
+        //先根据传入的orderNo，去尝试查询order
+        Order order = orderMapper.selectByOrderNo(orderNo);
+        //如果没有找到对应的订单，就抛出“订单不存在异常”
+        if (order == null) {
+            throw new ImoocMallException(ImoocMallExceptionEnum.NO_ORDER);
+        }
+
+        //如果当前登录用户是普通用户，且【要发货的订单】不属于当前登录用户：那么就抛出“订单不属于你”异常；
+        if (!userService.checkAdminRole(UserFilter.currentUser) &&
+                !order.getUserId().equals(UserFilter.currentUser.getId())) {
+            throw new ImoocMallException(ImoocMallExceptionEnum.NOT_YOUR_ORDER);
+        }
+        //如果能通过上面的检查，那么：要么【当前登录用户是管理员】，要么【当前登录用户是普通用户；且要操作的订单，属于当前登录用户】；
+        //而，上面的两种情况，都是允许完结订单的；
+
+        //如果，订单状态是已发货，那么我们就可以完结订单；也就是，我们就可以把订单状态改为完结；
+        if (order.getOrderStatus() == Constant.OrderStatusEnum.DELIVERED.getCode()) {
+            order.setOrderStatus(Constant.OrderStatusEnum.FINISHED.getCode());//更改订单状态为完结；
+            order.setEndTime(new Date());//设置一下订单完结时间；
+            orderMapper.updateByPrimaryKeySelective(order);
+        } else {
+            //如果，当前订单状态不是已发货，就抛出“当前订单状态错误”异常；
             throw new ImoocMallException(ImoocMallExceptionEnum.WRONG_ORDER_STATUS);
         }
     }
