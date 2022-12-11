@@ -2,12 +2,11 @@ package com.imooc.mall.controller;
 
 import com.imooc.mall.common.ApiRestResponse;
 import com.imooc.mall.model.request.CreateOrderReq;
+import com.imooc.mall.model.vo.OrderVO;
 import com.imooc.mall.service.OrderService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -32,4 +31,15 @@ public class OrderController {
         return ApiRestResponse.success(orderNum);
     }
 
+    /**
+     * 【前台：订单详情】接口；
+     * @param orderNo
+     * @return
+     */
+    @ApiOperation("订单详情")
+    @GetMapping("/order/detail")
+    public ApiRestResponse detail(@RequestParam("orderNo") String orderNo) {
+        OrderVO orderVO = orderService.detail(orderNo);
+        return ApiRestResponse.success(orderVO);
+    }
 }

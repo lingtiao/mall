@@ -1,6 +1,7 @@
 package com.imooc.mall.service;
 
 import com.imooc.mall.model.request.CreateOrderReq;
+import com.imooc.mall.model.vo.OrderVO;
 
 public interface OrderService {
 
@@ -10,4 +11,11 @@ public interface OrderService {
      * @return
      */
     String create(CreateOrderReq createOrderReq);
+
+    /**
+     * 根据订单号，获取订单详情
+     * @param orderNo
+     * @return
+     */
+    OrderVO detail(String orderNo);
 }

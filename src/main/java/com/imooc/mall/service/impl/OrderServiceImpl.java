@@ -13,9 +13,12 @@ import com.imooc.mall.model.pojo.OrderItem;
 import com.imooc.mall.model.pojo.Product;
 import com.imooc.mall.model.request.CreateOrderReq;
 import com.imooc.mall.model.vo.CartVO;
+import com.imooc.mall.model.vo.OrderItemVO;
+import com.imooc.mall.model.vo.OrderVO;
 import com.imooc.mall.service.CartService;
 import com.imooc.mall.service.OrderService;
 import com.imooc.mall.utils.OrderCodeFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -193,5 +196,64 @@ public class OrderServiceImpl implements OrderService {
         return totalPrice;
     }
 
+    /**
+     * 根据订单号，获取订单详情
+     * @param orderNo
+     * @return
+     */
+    @Override
+    public OrderVO detail(String orderNo) {
+        //首先，调用Dao层方法；根据订单号，去查询订单；
+        Order order = orderMapper.selectByOrderNo(orderNo);
 
+        //如果根据订单号，没有查到订单，就抛出“订单不存在”异常;
+        if (order == null) {
+            throw new ImoocMallException(ImoocMallExceptionEnum.NO_ORDER);
+        }
+
+        //如果订单存在，还要看下，这个订单是不是属于当前登录用户的；（因为可能存在，A用户去查一个属于B用户的订单：产生横向越权）
+        // 如果当前订单不属于当前登录用户，则抛出“订单不属于你”异常；
+        Integer userId = UserFilter.currentUser.getId();
+        if (!order.getUserId().equals(userId)) {
+            throw new ImoocMallException(ImoocMallExceptionEnum.NOT_YOUR_ORDER);
+        }
+
+        //调用工具方法：根据订单，按照接口对返回数据的要求，去组织订单详情数据
+        OrderVO orderVO = getOrderVO(order);
+
+        return orderVO;
+    }
+
+    /**
+     * 根据order订单信息，拼装【接口要求的数据格式】：OrderVO
+     * @param order
+     */
+    private OrderVO getOrderVO(Order order) {
+        //（1），创建一个OrderVO，然后把【order中，与orderVO中重复的属性，，，复制到orderVO上去】
+        OrderVO orderVO = new OrderVO();
+        BeanUtils.copyProperties(order, orderVO);
+
+        //（2），获取该订单的orderItemVOList(即，获取该订单中，每种商品的信息)
+        //根据orderNo，获取对应的OrderItem信息；
+        List<OrderItem> orderItemList = orderItemMapper.selectByOrderNo(order.getOrderNo());
+        List<OrderItemVO> orderItemVOList = new ArrayList<>();
+        //按照接口对返回数据的要求，把OrderItem转化为OrderItemVO；
+        for (int i = 0; i < orderItemList.size(); i++) {
+            OrderItem orderItem =  orderItemList.get(i);
+            OrderItemVO orderItemVO = new OrderItemVO();
+            BeanUtils.copyProperties(orderItem, orderItemVO);
+            orderItemVOList.add(orderItemVO);
+        }
+        //该订单的orderItemVOList，赋值给OrderVO；
+        orderVO.setOrderItemVOList(orderItemVOList);
+
+        //（3），获取待订单的订单状态码
+        Integer orderStatus = order.getOrderStatus();
+        //我们前面把订单状态定义在了枚举类中；借助我们定义的枚举，根据订单状态码获取订单状态的具体内容
+        String orderStatusName = Constant.OrderStatusEnum.codeOf(orderStatus).getValue();
+        //把订单状态的具体信息，赋值到OrderItem的属性上去
+        orderVO.setOrderStatusName(orderStatusName);
+
+        return orderVO;
+    }
 }
