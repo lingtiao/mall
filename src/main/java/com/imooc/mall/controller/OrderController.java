@@ -68,4 +68,16 @@ public class OrderController {
         orderService.cancel(orderNo);
         return ApiRestResponse.success();
     }
+
+    /**
+     * 【前台：生成支付二维码】接口;
+     * @param orderNo
+     * @return
+     */
+    @ApiOperation("生成支付二维码")
+    @PostMapping("/order/qrcode")
+    public ApiRestResponse qrcode(@RequestParam("orderNo") String orderNo) {
+        String pngAddress = orderService.qrcode(orderNo);
+        return ApiRestResponse.success(pngAddress);
+    }
 }

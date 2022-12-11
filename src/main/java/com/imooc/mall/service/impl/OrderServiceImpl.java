@@ -2,6 +2,7 @@ package com.imooc.mall.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.zxing.WriterException;
 import com.imooc.mall.common.Constant;
 import com.imooc.mall.exception.ImoocMallException;
 import com.imooc.mall.exception.ImoocMallExceptionEnum;
@@ -20,12 +21,18 @@ import com.imooc.mall.model.vo.OrderVO;
 import com.imooc.mall.service.CartService;
 import com.imooc.mall.service.OrderService;
 import com.imooc.mall.utils.OrderCodeFactory;
+import com.imooc.mall.utils.QRCodeGenerator;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,6 +53,9 @@ public class OrderServiceImpl implements OrderService {
     OrderMapper orderMapper;
     @Autowired
     OrderItemMapper orderItemMapper;
+
+    @Value("${file.upload.ip}")
+    String ip;
 
 
     /**
@@ -332,5 +342,36 @@ public class OrderServiceImpl implements OrderService {
             //否则，即抛出"当前订单状态，不允许取消"异常；
             throw new ImoocMallException(ImoocMallExceptionEnum.WRONG_ORDER_STATUS);
         }
+    }
+
+    /**
+     * 根据订单号，生成对应的支付二维码
+     * @param orderNo
+     * @return
+     */
+    @Override
+    public String qrcode(String orderNo) {
+        //首先，因为这儿是非Controller，所以，通过RequestContextHolder获取HttpServletRequest；
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        //然后，拼凑订单支付url的一部分：“127.0.0.1:8083”;
+        String address = ip + ":" + request.getLocalPort();
+        //然后，完整拼凑订单支付url：“http://127.0.0.1:8083//pay?orderNo=订单号”;
+        //这个就是将要写到二维码中的信息；其实，也是后面的【前台：支付订单】接口的，附带了orderNo参数的完整url
+        String payUrl = "http://" + address + "/pay?orderNo=" + orderNo;
+
+        //然后，调用我们在QRCodeGenerator工具类中编写的，生成二维码的方法；
+        try {
+            QRCodeGenerator.generateQRCode(payUrl, 350, 350, Constant.FILE_UPLOAD_DIR + orderNo + ".png");
+        } catch (WriterException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //获取二维码图片的访问地址；（PS：仅仅是访问地址，而是访问地址）
+        String pngAddress = "http://" + address + "/images/" + orderNo + ".png";
+        //然后，把这个二维码图片的访问地址返回；
+        return pngAddress;
     }
 }

@@ -33,4 +33,11 @@ public interface OrderService {
      * @param orderNum
      */
     void cancel(String orderNum);
+
+    /**
+     * 根据订单号，生成对应的支付二维码
+     * @param orderNo
+     * @return
+     */
+    String qrcode(String orderNo);
 }
