@@ -24,7 +24,8 @@ public enum ImoocMallExceptionEnum {
     CART_SELECTED_EMPTY(10018,"购物车勾选商品为空"),
     NO_ENUM(10019,"未找到对应的枚举类"),
     NO_ORDER(10020,"该订单不存在"),
-    NOT_YOUR_ORDER(10021,"该订单不属于你"),
+    NOT_YOUR_ORDER(10020,"该订单不属于你"),
+    WRONG_ORDER_STATUS(10021,"当前订单，不允许取消"),
     SYSTEM_ERROR(20001,"系统异常");
 
 

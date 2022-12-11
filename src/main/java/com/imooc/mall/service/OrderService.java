@@ -27,4 +27,10 @@ public interface OrderService {
      * @return
      */
     PageInfo listForCustomer(Integer pageNum, Integer pageSize);
+
+    /**
+     * 根据，orderNum，取消订单
+     * @param orderNum
+     */
+    void cancel(String orderNum);
 }

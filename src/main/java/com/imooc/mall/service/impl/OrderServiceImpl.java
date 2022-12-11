@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -297,5 +298,39 @@ public class OrderServiceImpl implements OrderService {
             orderVOList.add(orderVO);
         }
         return orderVOList;
+    }
+
+    /**
+     * 根据，orderNum，取消订单
+     * @param orderNum
+     */
+    @Override
+    public void cancel(String orderNum) {
+        //首先，根据传过来的订单号，去查订单；
+        Order order = orderMapper.selectByOrderNo(orderNum);
+        //如果没有查到订单，就抛出“订单不存在”异常；
+        if (order == null) {
+            throw new ImoocMallException(ImoocMallExceptionEnum.NO_ORDER);
+        }
+        //如果订单查到了，但发现该订单不隶属当前的登录用户，就抛出“订单不属于你”异常；
+        Integer userId = UserFilter.currentUser.getId();
+        if (!order.getUserId().equals(userId)) {
+            throw new ImoocMallException(ImoocMallExceptionEnum.NOT_YOUR_ORDER);
+        }
+
+        //这个项目，在这儿，我们做了简化处理：只有订单是未付款时，才能够取消；
+        // （其实，在实际中，即使付过款了，也还是能取消的，那就涉及到了退货等业务了）
+        if (order.getOrderStatus().equals(Constant.OrderStatusEnum.NOT_PAY.getCode())) {
+            //将订单的状态，设为取消；
+            order.setOrderStatus(Constant.OrderStatusEnum.CANCELED.getCode());
+            //既然，订单已经被取消，也表示这个订单已经完结了；所以，这儿我们设置下订单的完结时间；
+            order.setEndTime(new Date());
+
+            //然后，更新订单信息；
+            orderMapper.updateByPrimaryKeySelective(order);
+        } else {
+            //否则，即抛出"当前订单状态，不允许取消"异常；
+            throw new ImoocMallException(ImoocMallExceptionEnum.WRONG_ORDER_STATUS);
+        }
     }
 }
