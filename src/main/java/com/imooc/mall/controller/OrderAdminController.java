@@ -6,6 +6,7 @@ import com.imooc.mall.service.OrderService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,5 +23,17 @@ public class OrderAdminController {
     public ApiRestResponse listForAdmin(@RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize) {
         PageInfo pageInfo = orderService.listForAdmin(pageNum, pageSize);
         return ApiRestResponse.success(pageInfo);
+    }
+
+    /**
+     * 后台管理员的，订单发货
+     * @param orderNo
+     * @return
+     */
+    @ApiOperation("后台管理员的，订单发货")
+    @PostMapping("/admin/order/delivered")
+    public ApiRestResponse delivered(@RequestParam("orderNo") String orderNo) {
+        orderService.deliver(orderNo);
+        return ApiRestResponse.success();
     }
 }

@@ -420,4 +420,28 @@ public class OrderServiceImpl implements OrderService {
         pageInfo.setList(orderVOList);
         return pageInfo;
     }
+
+    /**
+     * 发货
+     * @param orderNo
+     */
+    @Override
+    public void deliver(String orderNo) {
+        //先根据传入的orderNo，去尝试查询order
+        Order order = orderMapper.selectByOrderNo(orderNo);
+        //如果没有找到对应的订单，就抛出“订单不存在异常”
+        if (order == null) {
+            throw new ImoocMallException(ImoocMallExceptionEnum.NO_ORDER);
+        }
+        //如果订单存在，就进行接下来的操作；
+        //如果，订单状态是已付款，那么我们就可以发货，我们就把订单状态改为已发货；
+        if (order.getOrderStatus() == Constant.OrderStatusEnum.PAID.getCode()) {
+            order.setOrderStatus(Constant.OrderStatusEnum.DELIVERED.getCode());//更改订单状态为已发货；
+            order.setDeliveryTime(new Date());//设置一下发货时间；
+            orderMapper.updateByPrimaryKeySelective(order);
+        } else {
+            //如果，当前订单状态不是已付款，就抛出“当前订单状态错误”异常；
+            throw new ImoocMallException(ImoocMallExceptionEnum.WRONG_ORDER_STATUS);
+        }
+    }
 }

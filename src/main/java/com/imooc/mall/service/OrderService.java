@@ -54,4 +54,10 @@ public interface OrderService {
      * @return
      */
     PageInfo listForAdmin(Integer pageNum, Integer pageSize);
+
+    /**
+     * 发货
+     * @param orderNo
+     */
+    void deliver(String orderNo);
 }
