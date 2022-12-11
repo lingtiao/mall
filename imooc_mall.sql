@@ -111,7 +111,7 @@ CREATE TABLE `imooc_mall_order_item`  (
   `order_no` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '归属订单id',
   `product_id` int(0) NOT NULL COMMENT '商品id',
   `product_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '商品名称',
-  `procduct_img` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '商品图片',
+  `product_img` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '商品图片',
   `unit_price` int(0) NOT NULL COMMENT '单价（下单的快照）',
   `quantity` int(0) NOT NULL COMMENT '商品数量',
   `total_price` int(0) NOT NULL COMMENT '商品总价',
