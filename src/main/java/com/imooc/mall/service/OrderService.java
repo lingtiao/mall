@@ -46,4 +46,12 @@ public interface OrderService {
      * @param orderNo
      */
     void pay(String orderNo);
+
+    /**
+     * 后台的，针对管理员的，获取订单列表方法；即，获取所有用户的订单的；
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    PageInfo listForAdmin(Integer pageNum, Integer pageSize);
 }

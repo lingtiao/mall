@@ -399,4 +399,25 @@ public class OrderServiceImpl implements OrderService {
             throw new ImoocMallException(ImoocMallExceptionEnum.WRONG_ORDER_STATUS);
         }
     }
+
+    /**
+     * 后台的，针对管理员的，获取订单列表方法；即，获取所有用户的订单的；
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public PageInfo listForAdmin(Integer pageNum, Integer pageSize) {
+        //然后，调用Dao层的方法，去查order表，根据userId查询List<order>；
+        List<Order> orderList = orderMapper.selectAllOrderForAdmin();
+        //由于接口要求，返回的数据格式，需要是OrderVO；；；所以，编写工具方法：把List<Order>拼装成List<OrderVO>；
+        List<OrderVO> orderVOList = orderListToOrderVOList(orderList);
+        //然后，设置分页的：当前页和每页条目数
+        PageHelper.startPage(pageNum, pageSize);
+        //然后，以Mybatis层返回的查询结果List，得到PageInfo对象
+        PageInfo pageInfo = new PageInfo<>(orderList);
+        //然后,把分页中具体的数据，更改为List<OrderVO>
+        pageInfo.setList(orderVOList);
+        return pageInfo;
+    }
 }

@@ -226,4 +226,11 @@
     order by create_time desc;
   </select>
 
+  <select id="selectAllOrderForAdmin" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from imooc_mall_order
+    order by create_time desc;
+  </select>
+
 </mapper>

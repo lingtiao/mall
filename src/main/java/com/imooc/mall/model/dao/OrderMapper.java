@@ -30,4 +30,10 @@ public interface OrderMapper {
      * @return
      */
     List<Order> selectOrderForCustomer(Integer userId);
+
+    /**
+     * 查询所有的订单
+     * @return
+     */
+    List<Order> selectAllOrderForAdmin();
 }
